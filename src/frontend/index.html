@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusBounty - Discipline AI</title>
+    <meta name="description" content="AI Discipline Agent - Face & Eye Tracking Focus Monitor">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👁️</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+        <i data-lucide="sun" class="w-5 h-5 sun-icon"></i>
+        <i data-lucide="moon" class="w-5 h-5 moon-icon"></i>
+    </button>
+    
+    <!-- Connection Status -->
+    <div id="connection-status" class="connection-status loading">Connecting...</div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboard-view" class="h-full flex items-center justify-center">
+        <div class="dash-container space-y-8">
+            
+            <!-- Header -->
+            <div class="space-y-4 text-center">
+                <div class="brand-badge">
+                    <div class="brand-icon">
+                        <i data-lucide="eye" class="w-5 h-5"></i>
+                    </div>
+                    <span class="brand-text">FocusBounty</span>
+                    <span class="brand-badge-tag">DISCIPLINE AI</span>
+                </div>
+                <h1 class="main-title">Ready for discipline?</h1>
+                <p class="subtitle">Face & Eye Tracking Focus Monitor</p>
+            </div>
+
+            <!-- Main Input -->
+            <div class="space-y-3">
+                <label class="input-label">Your Goal</label>
+                <input type="text" id="goal-input" class="goal-input" placeholder="What will you accomplish today?" autocomplete="off">
+            </div>
+
+            <!-- Settings Grid -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="stat-card">
+                    <div class="stat-label">Strictness Level</div>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="strictness" min="1" max="10" value="7" class="flex-1 accent-red-500">
+                        <span id="strictness-value" class="stat-value w-8 text-center">7</span>
+                    </div>
+                    <div class="stat-hint">Higher = More strict monitoring</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Voice Type</div>
+                    <select id="voice-select" class="voice-select">
+                        <option value="female">Female</option>
+                        <option value="male">Male</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Detection Info -->
+            <div class="detection-info">
+                <div class="detection-item">
+                    <i data-lucide="scan-face" class="w-5 h-5"></i>
+                    <span>Face Detection</span>
+                </div>
+                <div class="detection-item">
+                    <i data-lucide="eye" class="w-5 h-5"></i>
+                    <span>Eye Tracking</span>
+                </div>
+                <div class="detection-item">
+                    <i data-lucide="activity" class="w-5 h-5"></i>
+                    <span>Attention Score</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col items-center gap-4 pt-2">
+                <button id="join-btn" onclick="joinRoom()" class="start-btn group">
+                    <i data-lucide="shield" class="w-5 h-5"></i>
+                    <span>Start Discipline Session</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                <div class="helper-text">
+                    <i data-lucide="camera" class="w-4 h-4"></i>
+                    Camera required for face & eye tracking
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ROOM VIEW -->
+    <div id="room-view" class="hidden">
+        
+        <div class="main-stage">
+            
+            <!-- Video Feed -->
+            <div id="video-stage" class="video-container status-focused">
+                <video id="webcam-feed" autoplay playsinline muted></video>
+                
+                <div class="detection-overlay" id="detection-overlay"></div>
+                
+                <div class="video-overlay-top-left">
+                    <i data-lucide="target" class="w-4 h-4"></i>
+                    <span id="current-goal-display">Working...</span>
+                </div>
+
+                <div class="video-overlay-top-right">
+                    <div class="recording-dot"></div>
+                    <span id="session-timer">00:00</span>
+                </div>
+
+                <div class="ai-status-pill">
+                    <div id="status-icon-container" class="status-dot status-dot-green"></div>
+                    <span id="ai-status-text">👁️ Monitoring...</span>
+                </div>
+
+                <div class="live-stats-bar">
+                    <div class="live-stat">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                        <span>Attention: <b id="attention-score">100%</b></span>
+                    </div>
+                    <div class="live-stat">
+                        <i data-lucide="flame" class="w-4 h-4"></i>
+                        <span>Streak: <b id="streak-stats">0</b></span>
+                    </div>
+                    <div class="live-stat" id="status-badge">
+                        <span class="status-text">FOCUSED</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="flex items-center gap-2">
+                        <div class="sidebar-icon">
+                            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                        </div>
+                        <span>Discipline Log</span>
+                    </div>
+                    <span class="decisions-badge" id="decisions-count">0</span>
+                </div>
+                
+                <div id="chat-feed" class="sidebar-content">
+                    <div class="chat-msg system">
+                        <span class="chat-msg-time">System</span>
+                        👁️ Discipline AI activated. I'm watching everything.
+                    </div>
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="sidebar-stat">
+                        <span class="sidebar-stat-label">Attention</span>
+                        <span class="sidebar-stat-value" id="engagement-stats">100%</span>
+                    </div>
+                    <div class="sidebar-stat">
+                        <span class="sidebar-stat-label">Focus %</span>
+                        <span class="sidebar-stat-value" id="focus-percentage">100%</span>
+                    </div>
+                    <div class="sidebar-stat">
+                        <span class="sidebar-stat-label">Alerts</span>
+                        <span class="sidebar-stat-value alert-value" id="intervention-count">0</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Control Bar -->
+        <div class="bottom-bar">
+            
+            <div class="flex items-center gap-3 mr-auto">
+                <div class="brand-mini">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                    <span>FocusBounty</span>
+                </div>
+                <span class="divider">|</span>
+                <span class="clock" id="clock-display">12:00 PM</span>
+            </div>
+
+            <button id="cam-btn" class="control-btn" onclick="toggleCamera()" title="Toggle Camera">
+                <i data-lucide="video" class="w-5 h-5"></i>
+            </button>
+            
+            <button id="tts-btn" class="control-btn" onclick="toggleTTS()" title="Toggle Voice">
+                <i data-lucide="volume-2" class="w-5 h-5"></i>
+            </button>
+            
+            <button onclick="stopSession()" class="control-btn danger" title="End Session">
+                <i data-lucide="square" class="w-5 h-5"></i>
+            </button>
+
+            <div class="ml-auto w-[100px]"></div>
+        </div>
+
+    </div>
+
+    <div id="notifications" class="fixed top-16 left-1/2 transform -translate-x-1/2 space-y-2 pointer-events-none z-[60]"></div>
+
+    <script src="js/script.js"></script>
+    <script>
+        lucide.createIcons();
+        
+        function initTheme() {
+            const saved = localStorage.getItem('focusbounty-theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        }
+        
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('focusbounty-theme', next);
+        }
+        
+        initTheme();
+    </script>
+</body>
+</html>
