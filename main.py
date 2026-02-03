@@ -1,35 +1,33 @@
-#!/usr/bin/env python3
-"""
-FocusBounty - Entry Point
-Run: python main.py
-"""
-
 import sys
-import os
+from pathlib import Path
+import uvicorn
+import asyncio
+import signal
 
 # Add src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
+src_path = Path(__file__).parent / "src"
+sys.path.insert(0, str(src_path))
 
-if __name__ == "__main__":
-    import uvicorn
-    
-    print("""
-    ╔════════════════════════════════════════════════════════════╗
-    ║                                                            ║
-    ║   🎯 FocusBounty - Vigilante Focus Agent                   ║
-    ║                                                            ║
-    ║   AI-powered real-time focus enforcement                   ║
-    ║   Built with Gemini + Opik for Comet Resolution Hackathon  ║
-    ║                                                            ║
-    ╚════════════════════════════════════════════════════════════╝
-    """)
-    
-    print("  Open: http://localhost:8000")
-    print()
-    
-    uvicorn.run(
-        "backend.app:app",
+async def run_server():
+    """Start the FocusGuard AI web server with graceful shutdown."""
+    config = uvicorn.Config(
+        "focus_guard.server:app",
         host="0.0.0.0",
         port=8000,
-        reload=True
+        reload=True,
+        ws_ping_interval=None,
+        ws_ping_timeout=None
     )
+    server = uvicorn.Server(config)
+    await server.serve()
+
+def main():
+    """Entry point."""
+    
+    try:
+        asyncio.run(run_server())
+    except KeyboardInterrupt:
+        print("\n🛑 FocusGuard AI Stopped.")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusGuard AI - The Toxic Coach</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%234285F4%22/><circle cx=%2250%22 cy=%2250%22 r=%2215%22 fill=%22white%22/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/landing.css">
+</head>
+<body>
+    <header>
+        <div class="brand">FocusGuard AI</div>
+        <nav>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#diagram" class="nav-link">Architecture</a>
+            <a href="/app" class="btn-launch">Launch App</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h1>Stop Procrastinating.<br>Or Get Roasted.</h1>
+        <p>FocusGuard uses advanced Computer Vision (Iris Tracking) and Large Language Models (Llama 4) to force you into productivity with "Tough Love."</p>
+    </div>
+
+    <div class="diagram-section" id="diagram">
+        <h2 style="font-size: 32px; margin-bottom: 40px;">How It Works (System Architecture)</h2>
+        <div class="mermaid" style="background:white; padding:20px; border-radius:20px; overflow-x:auto;">
+            graph LR
+            subgraph "Input Layer"
+                A["1. User Webcam"] -->|"Video Stream"| B("2. MediaPipe Vision")
+            end
+            
+            B -->|"Iris & Head Pose"| C{"3. Detection Logic"}
+            
+            subgraph "Agentic Decision Core"
+                C -->|Distracted| D["4. Groq Cloud Agent"]
+                C -->|"Focused > 30s"| P["4a. Praise Engine"]
+            end
+            
+            subgraph "Groq Pipeline (Llama 4)"
+                D -->|Frame| E["5. The Scout (Vision)"]
+                E -->|Context| F["6. The Coach (Reasoning)"]
+                F -->|Draft| G["7. Safety Guard"]
+            end
+            
+            G -->|"Safe Roast"| H["8. TTS Output"]
+            P -->|"Meme/Sound"| H
+            H -->|"Audio Feedback"| A
+            
+            style A fill:#f9f,stroke:#333
+            style D fill:#bbf,stroke:#333
+            style H fill:#f96,stroke:#333
+        </div>
+    </div>
+    
+    <div style="text-align:center; padding: 60px 20px;">
+        <h2 style="font-size: 28px; margin-bottom: 20px;">Why FocusGuard?</h2>
+        <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+            <div style="background:rgba(255,255,255,0.7); padding:20px; border-radius:15px; width:250px;">
+                <h3>🤖 Toxic or Nice?</h3>
+                <p>It's not just mean. It praises you when you lock in. Balance is key to dopamine hacking.</p>
+            </div>
+            <div style="background:rgba(255,255,255,0.7); padding:20px; border-radius:15px; width:250px;">
+                <h3>👀 Next-Gen Tracking</h3>
+                <p>We use Iris Tracking to catch "side-eye" distractions that normal face detection misses.</p>
+            </div>
+            <div style="background:rgba(255,255,255,0.7); padding:20px; border-radius:15px; width:250px;">
+                <h3>⚡ Groq Powered</h3>
+                <p>Running on the LPU Inference Engine for near-instant roast delivery.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mermaid JS -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+
+    <footer>
+        &copy; 2026 FocusGuard AI. Built for the Hackathon.
+    </footer>
+</body>
+</html>

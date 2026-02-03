@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusGuard AI | Pro</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%234285F4%22/><circle cx=%2250%22 cy=%2250%22 r=%2215%22 fill=%22white%22/></svg>">
+    
+    <!-- Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <style>
+        /* New UI Polish */
+        .voice-selector {
+            display: flex;
+            gap: 5px;
+            background: rgba(255,255,255,0.4);
+            padding: 4px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        .voice-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 16px;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+        .voice-btn:hover { background: rgba(255,255,255,0.5); }
+        .voice-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            box-shadow: 0 4px 10px rgba(66, 133, 244, 0.3);
+        }
+        
+        /* Meme Overlay for Praise */
+        .meme-overlay {
+            position: absolute;
+            top: 50%; width: 100%; text-align: center;
+            transform: translateY(-50%);
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .meme-overlay.active { opacity: 1; pointer-events: auto; }
+        
+        .meme-content {
+            display: inline-block;
+            background: white;
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .meme-content img {
+            max-width: 300px;
+            border-radius: 15px;
+            display: block;
+        }
+        .god-mode-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes popIn { 0% { transform: scale(0.5); opacity:0; } 100% { transform: scale(1); opacity:1; } }
+    </style>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <header>
+        <div class="brand">FocusGuard AI</div>
+        <div style="display:flex; gap:20px; align-items:center;">
+            <a href="/" style="color:var(--text-secondary); text-decoration:none; font-weight:600;">Back to Home</a>
+            
+            <!-- Redesigned Voice Selector -->
+            <div class="voice-selector" id="voiceSelectorUI">
+                <button class="voice-btn active" onclick="setVoiceMode('auto', this)">Auto</button>
+                <button class="voice-btn" onclick="setVoiceMode('female', this)">Female</button>
+                <button class="voice-btn" onclick="setVoiceMode('male', this)">Male</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <div class="glass-panel">
+            <div class="status-badge" id="monitorStatus">
+                <span style="width: 8px; height: 8px; background: currentColor; border-radius: 50%;"></span>
+                System Standby
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value" id="focusTimer">00:00</div>
+                    <div class="stat-label">Focus Time</div>
+                </div>
+                <!-- Logic for Streak -->
+                <div class="stat-item">
+                     <div class="stat-value" style="color: var(--accent-yellow);" id="streakCounter">0m</div>
+                     <div class="stat-label">Direct Streak</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" style="color: var(--accent-red);" id="roastCounter">0</div>
+                    <div class="stat-label">Interventions</div>
+                </div>
+            </div>
+
+            <div class="video-container">
+                <video id="input_video" autoplay muted playsinline></video>
+                <canvas id="output_canvas"></canvas>
+                
+                <!-- Praise/Meme Overlay -->
+                <div class="meme-overlay" id="memeOverlay">
+                    <div class="meme-content">
+                        <div class="god-mode-text">GOD LIKE FOCUS! ⚡</div>
+                        <img id="memeImage" src="" alt="Motivation">
+                    </div>
+                </div>
+
+                <div class="hud-overlay">
+                    <div>FACE_TRACK: <span id="hudFace">OFF</span></div>
+                    <div>EYE_AR: <span id="hudEAR">0.00</span></div>
+                    <div>IRIS_POS: <span id="hudIris">--</span></div>
+                    <div>POSE_YAW: <span id="hudYaw">0.00</span></div>
+                </div>
+            </div>
+
+            <!-- New Controls Row -->
+            <div style="margin-top:20px; display:flex; gap:20px; justify-content:center; align-items:center;">
+                <label style="font-size:14px; color:var(--text-secondary); display:flex; align-items:center; gap:5px;">
+                    <input type="checkbox" id="meshToggle" checked> Show Neural Mesh
+                </label>
+            </div>
+
+            <div class="controls" style="margin-top: 20px;">
+                <button class="btn btn-start" id="startBtn">
+                    <span>⚡ Start Focus</span>
+                </button>
+                <button class="btn btn-stop" id="stopBtn">
+                    <span>🛑 End Session</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="log-panel" id="logPanel">
+            <div>[SYSTEM] Ready to initialize...</div>
+        </div>
+    </div>
+
+    <!-- Report Card Modal -->
+    <div class="glass-panel" id="reportCardStyle" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:3000; width:90%; max-width:500px; text-align:left;">
+        <h2 style="color:var(--text-main); margin-bottom:20px; text-align:center;">📊 Session Report Card</h2>
+        <div style="margin-bottom:15px; display:flex; justify-content:space-between;">
+            <span>Focus Duration:</span>
+            <span id="rcDuration" style="font-weight:bold;">00:00</span>
+        </div>
+        <div style="margin-bottom:15px; display:flex; justify-content:space-between;">
+            <span>Total Distractions:</span>
+            <span id="rcRoasts" style="font-weight:bold; color:var(--accent-red);">0</span>
+        </div>
+        <div style="margin-bottom:25px; display:flex; justify-content:space-between;">
+            <span>Avg Recovery Time:</span>
+            <span id="rcRecovery" style="font-weight:bold; color:var(--accent-green);">0s</span>
+        </div>
+        
+        <div style="background:rgba(0,0,0,0.05); padding:15px; border-radius:12px; margin-bottom:20px;">
+            <div style="font-size:12px; color:var(--text-secondary); text-transform:uppercase; font-weight:800; margin-bottom:5px;">TOXIC COACH VERDICT</div>
+            <div id="rcVerdict" style="font-size:18px; font-weight:600; font-style:italic;">"Calculating judgment..."</div>
+        </div>
+
+        <button class="btn btn-start" style="width:100%; justify-content:center;" onclick="location.reload()">High Five (Closing)</button>
+    </div>
+
+    <!-- Roast Modal -->
+    <div class="roast-modal" id="roastModal">
+        <div class="roast-icon">🤬</div>
+        <div class="roast-content">
+            <div>Toxic Coach Says:</div>
+            <div id="roastText">"Get back to work!"</div>
+        </div>
+    </div>
+
+    <!-- Custom Logic -->
+    <script type="module" src="/static/js/app.js"></script>
+    <script>
+        // Global helper for the HTML onclicks
+        window.setVoiceMode = (mode, btn) => {
+            // Logic handled in app.js via event delegation or duplicate logic, 
+            // but for simplicity we will let app.js attach listeners or expose this.
+            // Actually, better to dispatch a custom event or just update UI class here 
+            // and let app.js poll or listen.
+            
+            document.querySelectorAll('.voice-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Dispatch event for app.js
+            window.dispatchEvent(new CustomEvent('voice-change', { detail: { mode: mode } }));
+        }
+    </script>
+</body>
+</html>

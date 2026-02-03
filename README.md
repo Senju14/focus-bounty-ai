@@ -1,93 +1,68 @@
-# FocusBounty - AI Focus Coach
+# FocusGuard AI
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/focus-bounty-ai)
+FocusGuard AI is a productivity tool built for the Comet Resolution V2 Hackathon. It uses computer vision to track your focus and generative AI to provide feedback if you get distracted.
 
-AI-powered focus enforcement with face detection for the **Comet Resolution V2 Hackathon**.
+## How It Works
 
-## Features
+The system uses a 3-step pipeline to ensure accuracy and safety:
 
-- 🎯 **Face Detection** - Monitors if you're at your desk
-- 🤖 **AI Coach** - Cute anime-style encouragement & warnings
-- 🔊 **TTS Voice** - Anime girl voice feedback
-- 📊 **Opik Integration** - Full observability & tracing
+1.  **Vision (The Scout)**: A computer vision model analyzes your webcam feed to detect what you are doing—whether you are working, looking at your phone, or absent.
+2.  **Reasoning (The Coach)**: If you are distracted, a reasoning model generates a sarcastic or "tough love" comment based on your specific distraction.
+3.  **Safety (The Guard)**: A safety filter checks the comment to ensure it is appropriate before it is spoken aloud.
 
-## Tech Stack
+## Key Features
 
-- **Backend**: FastAPI + Python
-- **AI**: Gemini 2.0 Flash-Lite (with fallback logic)
-- **Detection**: OpenCV Haar Cascade + YOLOv8
-- **Observability**: Opik (Comet)
-- **Frontend**: HTML + TailwindCSS + Vanilla JS
+*   **Iris Tracking**: Detects if your eyes are looking away from the screen, even if your head is facing forward.
+*   **Dynamic Voice**: Uses different voices for variety.
+*   **Report Card**: Grades your focus session from F to A+ when you finish.
+*   **Tab Awareness**: Sends a browser notification if you switch tabs to procrastinate.
+*   **Observability**: All AI decisions are logged to Opik for debugging.
 
-## Quick Start
+## Getting Started
 
-```bash
-# Clone
-git clone https://github.com/YOUR_USERNAME/focus-bounty-ai
-cd focus-bounty-ai
+### Prerequisites
 
-# Install
-pip install -r requirements.txt
+*   Python 3.10 or higher
+*   A Webcam
+*   Groq API Key (for the AI models)
 
-# Configure
-cp .env.example .env
-# Add your GEMINI_API_KEY and OPIK_API_KEY
+### Installation
 
-# Run
-python main.py
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/focus-guard.git
+    cd focus-guard
+    ```
 
-# Open http://localhost:8000
-```
+2.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-## Deployment
+3.  Configure Environment:
+    Create a file named `.env` and add your keys:
+    ```env
+    GROQ_API_KEY=gsk_your_key_here
+    OPIK_API_KEY=your_opik_key_here
+    ```
 
-### Local Network
-Server binds to `0.0.0.0:8000` - accessible from any device on your network.
+4.  Run the application:
+    ```bash
+    python main.py
+    ```
 
-### Vercel (Limited)
-```bash
-vercel deploy
-```
-> Note: WebSocket not fully supported on Vercel serverless. 
-> For full functionality, use Railway or Render.
+5.  Open your browser:
+    *   **Landing Page**: http://localhost:8000
+    *   **Application**: http://localhost:8000/app
 
-### Railway (Recommended)
-```bash
-railway init
-railway up
-```
+## Technology Stack
 
-## Project Structure
-
-```
-focus-bounty-ai/
-├── main.py              # Entry point (0.0.0.0:8000)
-├── vercel.json          # Vercel config
-├── api/index.py         # Serverless entry
-├── src/
-│   ├── backend/
-│   │   ├── app.py       # FastAPI server
-│   │   ├── agent.py     # AI logic + Opik
-│   │   ├── perception.py # Face detection
-│   │   ├── actions.py   # Interventions
-│   │   └── evaluation.py # Benchmarks
-│   └── frontend/
-│       ├── index.html
-│       ├── css/style.css
-│       └── js/script.js
-```
-
-## Opik Integration
-
-All decisions traced to `FocusBounty-Hackathon` project:
-- Face detection events
-- Intervention decisions
-- Session statistics
+*   **Frontend**: HTML, JavaScript, CSS
+*   **Vision**: Google MediaPipe (Face Mesh & Iris)
+*   **Backend**: Python (FastAPI)
+*   **AI Models**: Groq (Llama 4)
+*   **Tracking**: Comet Opik
 
 ## License
 
-MIT
-
----
-
-Built for [Comet Resolution V2 Hackathon](https://www.encodeclub.com/my-programmes/comet-resolution-v2-hackathon) 🚀
+MIT License
