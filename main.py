@@ -7,6 +7,8 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
+# Export app for Vercel
+from focus_guard.server import app
 
 def main():
     import uvicorn
