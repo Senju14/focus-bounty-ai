@@ -50,13 +50,17 @@ class GroqAgent:
     
     def __init__(self, reasoning_model: str = REASONING_MODEL):
         api_key = os.getenv("GROQ_API_KEY") or os.getenv("GROG_API_KEY")
-        if not api_key:
-            raise ValueError("GROQ_API_KEY or GROG_API_KEY is required.")
+        self.enabled = bool(api_key)
         
-        self.client = Groq(api_key=api_key)
-        self.reasoning_model = reasoning_model
-        self.vision_model = VISION_MODEL
-        self.safety_model = SAFETY_MODEL
+        if self.enabled:
+            self.client = Groq(api_key=api_key)
+            self.reasoning_model = reasoning_model
+            self.vision_model = VISION_MODEL
+            self.safety_model = SAFETY_MODEL
+        else:
+            self.client = None
+            print("Warning: GROQ_API_KEY not set. AI features disabled.")
+        
         self.system_prompt = SYSTEM_PROMPT
 
     # =========================================================================
@@ -133,6 +137,14 @@ class GroqAgent:
     @track(name="process_distraction")
     def process_distraction(self, image_b64: str) -> Dict[str, Any]:
         """Run the full 3-stage pipeline."""
+        if not self.enabled:
+            return {
+                "is_focused": False,
+                "activity": "AI disabled - no API key",
+                "tease": "Yo, set up GROQ_API_KEY to unlock the roasts! 🔑",
+                "safe": True
+            }
+        
         # Stage 1: Vision
         description = self.analyze_image(image_b64)
         
