@@ -7,17 +7,16 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-# Export app for Vercel
-from focus_guard.server import app
 
 def main():
     import uvicorn
+    from focus_guard.server import app
     
     print("Starting FocusGuard AI...")
     print("Open http://localhost:8000 in your browser")
     
     uvicorn.run(
-        "focus_guard.server:app",
+        app,
         host="127.0.0.1",
         port=8000,
         reload=False,

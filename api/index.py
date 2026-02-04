@@ -3,11 +3,13 @@ FocusGuard AI - Vercel Serverless Entry Point
 """
 import sys
 import os
+from pathlib import Path
 
 # Add src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+root = Path(__file__).parent.parent
+sys.path.insert(0, str(root / "src"))
 
 from focus_guard.server import app
 
-# Export for Vercel
-handler = app
+# Vercel expects 'app' variable
+app = app
