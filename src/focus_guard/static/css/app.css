@@ -1,0 +1,361 @@
+/* App Page Specific Styles */
+
+/* Navigation */
+.header-nav {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 18px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--text-main);
+}
+
+.nav-link.active {
+    background: var(--accent-blue);
+    color: white;
+}
+
+/* Voice Select Dropdown */
+.voice-select {
+    padding: 8px 12px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.4);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.voice-select:hover {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: var(--accent-blue);
+}
+
+.voice-select:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
+}
+
+/* Status */
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    border-radius: 50%;
+}
+
+.stat-streak {
+    color: var(--accent-yellow);
+}
+
+.stat-roast {
+    color: var(--accent-red);
+}
+
+/* Controls Row */
+.controls-row {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkbox-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+/* Meme Overlay */
+.meme-overlay {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.meme-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.meme-content {
+    display: inline-block;
+    background: white;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.meme-content img {
+    max-width: 300px;
+    border-radius: 15px;
+    display: block;
+}
+
+.god-mode-text {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #FFD700, #FFA500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Report Modal */
+.report-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3000;
+    width: 90%;
+    max-width: 500px;
+    text-align: left;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    padding: 40px;
+}
+
+.report-modal.active {
+    display: block;
+}
+
+.report-title {
+    color: var(--text-main);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.report-row {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.report-row-last {
+    margin-bottom: 25px;
+}
+
+.report-value {
+    font-weight: bold;
+}
+
+.report-value-red {
+    color: var(--accent-red);
+}
+
+.report-value-green {
+    color: var(--accent-green);
+}
+
+.verdict-box {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.verdict-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.verdict-text {
+    font-size: 18px;
+    font-weight: 600;
+    font-style: italic;
+}
+
+/* Camera Toggle Button */
+.cam-toggle-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-blue), #7c4dff);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+.cam-toggle-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+}
+
+.cam-toggle-btn.active {
+    background: linear-gradient(135deg, var(--accent-green), #00c853);
+}
+
+/* Floating Camera Preview */
+.floating-cam {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 180px;
+    height: 135px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 3px solid var(--accent-blue);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    background: #000;
+    display: none;
+    animation: camSlideIn 0.3s ease;
+}
+
+.floating-cam.active {
+    display: block;
+}
+
+@keyframes camSlideIn {
+    0% { transform: translateY(100px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.floating-cam video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+.floating-cam-close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.floating-cam-close:hover {
+    background: var(--accent-red);
+    transform: scale(1.1);
+}
+
+.floating-cam-label {
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+/* Button variants */
+.btn-full {
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-modal {
+    margin-top: 20px;
+}
+
+/* Roast meme */
+.roast-meme {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.roast-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    margin-bottom: 5px;
+}
+
+/* Status colors for JavaScript */
+.status-warning {
+    color: var(--accent-red);
+}
+
+.status-ok {
+    color: var(--accent-green);
+}
+
+/* Log time styling */
+.log-time {
+    color: var(--accent-blue);
+}
+
+/* Siren flash effect */
+.siren-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: red;
+    opacity: 0.5;
+    z-index: 9999;
+    pointer-events: none;
+    animation: blink 0.2s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 0.5; }
+    50% { opacity: 0; }
+    100% { opacity: 0.5; }
+}

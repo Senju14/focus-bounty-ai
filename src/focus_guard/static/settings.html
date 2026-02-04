@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusGuard AI | Settings</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%234285F4%22/><circle cx=%2250%22 cy=%2250%22 r=%2215%22 fill=%22white%22/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/settings.css">
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <header>
+        <div class="brand">FocusGuard AI</div>
+        <nav class="header-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/app" class="nav-link">Focus App</a>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/settings" class="nav-link active">Settings</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="glass-panel">
+            <h1 class="page-title">Settings</h1>
+            <p class="page-subtitle">Customize your FocusGuard experience</p>
+
+            <!-- Voice Settings -->
+            <div class="settings-section">
+                <h2>Voice Settings</h2>
+                
+                <div class="setting-item">
+                    <label for="voiceType">Voice Type</label>
+                    <select id="voiceType">
+                        <option value="auto">Auto (Random)</option>
+                        <option value="female-young">Female - Young</option>
+                        <option value="female-mature">Female - Mature</option>
+                        <option value="male-young">Male - Young</option>
+                        <option value="male-mature">Male - Mature</option>
+                        <option value="robotic">Robotic</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label for="voiceLanguage">Language</label>
+                    <select id="voiceLanguage">
+                        <option value="en-US">English (US)</option>
+                        <option value="en-GB">English (UK)</option>
+                        <option value="vi-VN">Vietnamese</option>
+                        <option value="ja-JP">Japanese</option>
+                        <option value="ko-KR">Korean</option>
+                        <option value="zh-CN">Chinese (Simplified)</option>
+                        <option value="es-ES">Spanish</option>
+                        <option value="fr-FR">French</option>
+                        <option value="de-DE">German</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label for="speechRate">Speech Rate</label>
+                    <input type="range" id="speechRate" min="0.5" max="2" step="0.1" value="1.1" title="Speech Rate">
+                    <span id="speechRateValue">1.1x</span>
+                </div>
+
+                <div class="setting-item">
+                    <label for="voicePitch">Voice Pitch</label>
+                    <input type="range" id="voicePitch" min="0.5" max="2" step="0.1" value="1" title="Voice Pitch">
+                    <span id="voicePitchValue">1.0</span>
+                </div>
+            </div>
+
+            <!-- Detection Settings -->
+            <div class="settings-section">
+                <h2>Detection Settings</h2>
+                
+                <div class="setting-item toggle">
+                    <label for="showMesh">Show Neural Mesh Overlay</label>
+                    <label class="switch">
+                        <input type="checkbox" id="showMesh" checked title="Show Mesh">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item toggle">
+                    <label for="tabDetection">Enable Tab Switch Detection</label>
+                    <label class="switch">
+                        <input type="checkbox" id="tabDetection" checked title="Tab Detection">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item toggle">
+                    <label for="playSiren">Play Warning Siren</label>
+                    <label class="switch">
+                        <input type="checkbox" id="playSiren" checked title="Play Siren">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item toggle">
+                    <label for="showWarningVideo">Show Warning Video</label>
+                    <label class="switch">
+                        <input type="checkbox" id="showWarningVideo" title="Show Warning Video">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <label for="roastCooldown">Cooldown Between Roasts (seconds)</label>
+                    <input type="number" id="roastCooldown" min="5" max="60" value="12">
+                </div>
+            </div>
+
+            <!-- Notification Settings -->
+            <div class="settings-section">
+                <h2>Notification Settings</h2>
+                
+                <div class="setting-item toggle">
+                    <label for="browserNotifications">Enable Browser Notifications</label>
+                    <label class="switch">
+                        <input type="checkbox" id="browserNotifications" checked title="Browser Notifications">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <button class="btn btn-start btn-full" id="requestNotificationBtn">
+                    Request Notification Permission
+                </button>
+            </div>
+
+            <!-- Test Section -->
+            <div class="settings-section">
+                <h2>Test Settings</h2>
+                <div class="test-buttons">
+                    <button class="btn btn-stop" id="testVoiceBtn">Test Voice</button>
+                    <button class="btn btn-stop" id="testNotificationBtn">Test Notification</button>
+                    <button class="btn btn-stop" id="testVideoBtn">Test Warning Video</button>
+                </div>
+            </div>
+
+            <!-- Save Status -->
+            <div id="saveStatus" class="save-status">Settings saved!</div>
+        </div>
+    </div>
+
+    <!-- Warning Video Modal -->
+    <div class="video-modal" id="warningVideoModal">
+        <div class="video-modal-content">
+            <video id="warningVideo" autoplay>
+                <source src="/static/assets/video/warning.mp4" type="video/mp4">
+            </video>
+            <button class="btn btn-start btn-modal" id="closeVideoBtn">
+                I'll Focus Now!
+            </button>
+        </div>
+    </div>
+
+    <script src="/static/js/settings.js"></script>
+</body>
+</html>

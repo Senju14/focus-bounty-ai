@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusGuard AI | Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%234285F4%22/><circle cx=%2250%22 cy=%2250%22 r=%2215%22 fill=%22white%22/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <header>
+        <div class="brand">FocusGuard AI</div>
+        <nav class="header-nav">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/app" class="nav-link">Focus App</a>
+            <a href="/dashboard" class="nav-link active">Dashboard</a>
+            <a href="/settings" class="nav-link">Settings</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="glass-panel">
+            <h1 class="page-title">Focus Dashboard</h1>
+            <p class="page-subtitle">Track your productivity history and insights</p>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-time">TIME</div>
+                    <div class="stat-value" id="totalFocusTime">0h 0m</div>
+                    <div class="stat-label">Total Focus Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-sessions">DONE</div>
+                    <div class="stat-value" id="totalSessions">0</div>
+                    <div class="stat-label">Sessions Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-roasts">ROAST</div>
+                    <div class="stat-value" id="totalRoasts">0</div>
+                    <div class="stat-label">Total Roasts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-recovery">AVG</div>
+                    <div class="stat-value" id="avgRecovery">0s</div>
+                    <div class="stat-label">Avg Recovery</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Session History -->
+        <div class="glass-panel">
+            <div class="section-header">
+                <h2>Session History</h2>
+                <button class="btn btn-small" id="clearHistoryBtn">Clear All</button>
+            </div>
+            
+            <div class="history-list" id="historyList">
+                <div class="empty-state">
+                    <span class="empty-icon">--</span>
+                    <p>No sessions recorded yet. Start focusing!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="glass-panel">
+            <h2 class="section-title">Activity Log</h2>
+            <div class="log-container" id="activityLog">
+                <div class="empty-state">
+                    <span class="empty-icon">--</span>
+                    <p>Activity log will appear here after your sessions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

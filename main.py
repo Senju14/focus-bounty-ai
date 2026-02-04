@@ -1,33 +1,27 @@
+"""
+FocusGuard AI - Entry Point
+Run locally: python main.py
+"""
 import sys
-from pathlib import Path
-import uvicorn
-import asyncio
-import signal
+import os
 
-# Add src to path
-src_path = Path(__file__).parent / "src"
-sys.path.insert(0, str(src_path))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
-async def run_server():
-    """Start the FocusGuard AI web server with graceful shutdown."""
-    config = uvicorn.Config(
-        "focus_guard.server:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-        ws_ping_interval=None,
-        ws_ping_timeout=None
-    )
-    server = uvicorn.Server(config)
-    await server.serve()
 
 def main():
-    """Entry point."""
+    import uvicorn
     
-    try:
-        asyncio.run(run_server())
-    except KeyboardInterrupt:
-        print("\n🛑 FocusGuard AI Stopped.")
+    print("Starting FocusGuard AI...")
+    print("Open http://localhost:8000 in your browser")
+    
+    uvicorn.run(
+        "focus_guard.server:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=False,
+        log_level="info"
+    )
+
 
 if __name__ == "__main__":
     main()

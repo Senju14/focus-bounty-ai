@@ -45,6 +45,7 @@ dist/
 .vscode/
 *.swp
 *.swo
+*.sublime-*
 
 # Environment
 .env
@@ -52,14 +53,31 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*
 
 # YOLO model weights
 *.pt
+*.pth
+*.onnx
 
 # Logs
 *.log
 logs/
 
-# uv
+# uv & Package managers
 .uv/
 uv.lock
+poetry.lock
+Pipfile.lock
+
+# Media (large files)
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Misc
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp

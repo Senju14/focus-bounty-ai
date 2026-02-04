@@ -1,3 +1,9 @@
+"""
+Backend Voice Agent using pyttsx3.
+
+NOTE: Currently the app uses browser Web Speech API for TTS.
+This module is kept for potential server-side TTS implementation.
+"""
 import pyttsx3
 
 class VoiceAgent:

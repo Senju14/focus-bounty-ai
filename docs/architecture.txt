@@ -1,0 +1,152 @@
+================================================================================
+                    FocusGuard AI - System Architecture
+================================================================================
+
+OVERVIEW
+--------
+FocusGuard AI is a web-based productivity tool that uses computer vision and 
+LLMs to monitor user focus and provide "tough love" feedback when distracted.
+
+
+SYSTEM FLOW
+-----------
+
+    +------------------+
+    |   USER WEBCAM    |
+    +--------+---------+
+             |
+             | Video Stream
+             v
+    +------------------+
+    |   BROWSER TAB    |
+    |  (Frontend App)  |
+    +--------+---------+
+             |
+             | MediaPipe FaceMesh
+             | - Iris tracking
+             | - Eye Aspect Ratio (EAR)
+             | - Head pose (yaw)
+             v
+    +------------------+
+    |  FOCUS DETECTOR  |
+    |  Distracted? --->|--- YES ---> WebSocket ---> Backend
+    |  Focused 30s? -->|--- YES ---> Praise popup (local)
+    +------------------+
+
+
+BACKEND PIPELINE (3-Stage Agentic AI)
+-------------------------------------
+
+    +-----------------------------------------------------+
+    |                  FASTAPI SERVER                     |
+    +-----------------------------------------------------+
+    |                                                     |
+    |   Stage 1: THE SCOUT (Vision)                       |
+    |   +---------------------------------------------+   |
+    |   | Model: Llama 4 Scout 17B (Vision)           |   |
+    |   | Input: Webcam frame (base64 JPEG)           |   |
+    |   | Output: Description of user behavior        |   |
+    |   | Example: "User is looking at phone"         |   |
+    |   +---------------------------------------------+   |
+    |                        |                            |
+    |                        v                            |
+    |   Stage 2: THE COACH (Reasoning)                    |
+    |   +---------------------------------------------+   |
+    |   | Model: Llama 4 Maverick 17B (Instruct)      |   |
+    |   | Input: Vision description + System prompt   |   |
+    |   | Output: Witty roast (under 15 words)        |   |
+    |   | Example: "TikTok won't pay your bills, Huy" |   |
+    |   +---------------------------------------------+   |
+    |                        |                            |
+    |                        v                            |
+    |   Stage 3: THE GUARD (Safety)                       |
+    |   +---------------------------------------------+   |
+    |   | Model: Llama Guard 4 12B                    |   |
+    |   | Input: Generated roast text                 |   |
+    |   | Output: "safe" or "unsafe"                  |   |
+    |   | Purpose: Filter harmful content             |   |
+    |   +---------------------------------------------+   |
+    |                        |                            |
+    +-----------------------------------------------------+
+                             |
+                             | WebSocket response
+                             v
+    +------------------+
+    |   BROWSER TAB    |
+    |  - Display roast |
+    |  - TTS voice     |
+    |  - Show meme     |
+    +------------------+
+
+
+TECH STACK
+----------
+
+Frontend:
+  - HTML/CSS/JavaScript (vanilla, no framework)
+  - MediaPipe FaceMesh (iris tracking, face mesh)
+  - Web Speech API (text-to-speech)
+  - WebSocket (real-time communication)
+  - LocalStorage (session history, settings)
+
+Backend:
+  - Python 3.11+
+  - FastAPI (web framework)
+  - Uvicorn (ASGI server)
+  - Groq SDK (LLM inference)
+  - Opik (LLM observability/tracing)
+
+AI Models (via Groq Cloud):
+  - meta-llama/llama-4-scout-17b-16e-instruct (vision)
+  - meta-llama/llama-4-maverick-17b-128e-instruct (reasoning)
+  - meta-llama/llama-guard-4-12b (safety)
+
+
+DATA FLOW SUMMARY
+-----------------
+
+1. User opens /app in browser
+2. Browser requests webcam access
+3. MediaPipe analyzes face landmarks every frame
+4. If distracted (eyes closed, looking away, face lost):
+   - Frontend sends frame + reason to backend via WebSocket
+   - Backend runs 3-stage AI pipeline
+   - Backend returns roast text
+   - Frontend shows popup + speaks roast via TTS
+5. If focused for 30+ seconds:
+   - Frontend shows praise meme (no backend call)
+
+
+KEY FEATURES
+------------
+
+- Iris-level eye tracking (not just face detection)
+- Sub-200ms roast latency (Groq LPU)
+- Tab switch detection (visibility API)
+- Voice customization (male/female/robotic)
+- Session analytics (focus time, roast count, grade)
+- Privacy-first (video processed locally, only frames sent when distracted)
+
+
+FILE STRUCTURE
+--------------
+
+focus-bounty-ai/
+├── main.py                    # Entry point (uvicorn server)
+├── src/focus_guard/
+│   ├── server.py              # FastAPI routes + WebSocket
+│   └── engine/
+│       ├── groq_agent.py      # 3-stage AI pipeline
+│       ├── vision.py          # MediaPipe helpers (optional)
+│       └── voice.py           # TTS helpers (optional)
+└── src/focus_guard/static/
+    ├── landing.html           # Product landing page
+    ├── app.html               # Main focus app
+    ├── dashboard.html         # Session history
+    ├── settings.html          # User preferences
+    ├── css/                   # Stylesheets
+    ├── js/app.js              # Main frontend logic
+    └── assets/                # Images, videos, memes
+
+
+================================================================================
