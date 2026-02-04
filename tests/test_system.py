@@ -180,18 +180,16 @@ class TestStaticAssets:
             "..", "src", "focus_guard", "static", "assets", "memes"
         )
         if os.path.exists(meme_dir):
-            files = os.listdir(meme_dir)
+            files = [f for f in os.listdir(meme_dir) if f.endswith(('.jpg', '.png', '.gif'))]
             assert len(files) > 0, "Meme folder should have images"
 
-    def test_video_files_exist(self):
-        """Test video files are present."""
-        video_dir = os.path.join(
+    def test_uploads_folder_exists(self):
+        """Test user uploads folder exists."""
+        uploads_dir = os.path.join(
             os.path.dirname(__file__), 
-            "..", "src", "focus_guard", "static", "assets", "video"
+            "..", "src", "focus_guard", "static", "assets", "memes", "uploads"
         )
-        if os.path.exists(video_dir):
-            files = os.listdir(video_dir)
-            assert len(files) > 0, "Video folder should have files"
+        assert os.path.exists(uploads_dir), "Uploads folder should exist for user memes"
 
     def test_html_pages_exist(self):
         """Test all HTML pages exist."""

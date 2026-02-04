@@ -88,9 +88,6 @@ function getSettings() {
         speechRate: 1.1,
         voicePitch: 1.0,
         showMesh: true,
-        tabDetection: true,
-        playSiren: true,
-        showWarningVideo: false,
         roastCooldown: 12,
         browserNotifications: true
     };
@@ -194,36 +191,6 @@ function triggerPraise() {
 }
 
 // =============================================================================
-// Audio Effects
-// =============================================================================
-
-function playSiren() {
-    var ctx = new (window.AudioContext || window.webkitAudioContext)();
-    var osc = ctx.createOscillator();
-    var gain = ctx.createGain();
-    
-    osc.type = "sawtooth";
-    osc.frequency.value = 440;
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-
-    var time = ctx.currentTime;
-    for (var i = 0; i < 10; i++) {
-        osc.frequency.linearRampToValueAtTime(880, time + 0.5);
-        osc.frequency.linearRampToValueAtTime(440, time + 1.0);
-        time += 1.0;
-    }
-    osc.stop(time);
-
-    // Flash Screen Effect
-    var flash = document.createElement("div");
-    flash.className = "siren-flash";
-    document.body.appendChild(flash);
-    setTimeout(function() { flash.remove(); }, 2000);
-}
-
-// =============================================================================
 // Logging
 // =============================================================================
 
@@ -309,7 +276,7 @@ function triggerRoast(text) {
     var roastMemeEl = document.getElementById("roastMeme");
     if (roastMemeEl) {
         roastMemeEl.src = randomMeme;
-        roastMemeEl.style.display = "block";
+        roastMemeEl.classList.remove("roast-meme-hidden");
     }
 
     roastTextEl.textContent = '"' + text + '"';
@@ -318,7 +285,7 @@ function triggerRoast(text) {
     
     setTimeout(function() { 
         roastModal.classList.remove("active");
-        if (roastMemeEl) roastMemeEl.style.display = "none";
+        if (roastMemeEl) roastMemeEl.classList.add("roast-meme-hidden");
     }, 6000);
 }
 
@@ -607,36 +574,19 @@ document.getElementById("startBtn").onclick = function() {
         }
     }, 1000);
 
-    // Tab Visibility Detection
+    // Tab Visibility Detection - show message when user switches tab
     document.addEventListener("visibilitychange", handleVisibilityChange);
     log("System Armed. Monitoring active.");
 };
 
 function handleVisibilityChange() {
-    settings = getSettings();
-    if (!document.hidden || !isMonitoring || !settings.tabDetection) return;
+    if (!document.hidden || !isMonitoring) return;
     
     var reason = "User switched tabs/windows";
     
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ reason: reason }));
-        
-        if (settings.browserNotifications) {
-            var notification = new Notification("FocusGuard Alert!", {
-                body: "GET BACK TO WORK! The Toxic Coach is watching.",
-                tag: "focusguard-tab",
-                requireInteraction: true
-            });
-            notification.onclick = function() {
-                window.focus();
-                notification.close();
-            };
-        }
-        
-        if (settings.playSiren) {
-            playSiren();
-        }
-        
+        log("⚠️ Tab switched - distraction detected!");
         saveActivityLog("[WARNING] Tab switched - distraction detected!", "warning");
     }
 }
@@ -645,7 +595,6 @@ document.getElementById("stopBtn").onclick = function() {
     isMonitoring = false;
     isDistracted = false;
     warningVisible = false;
-    closeWarningPopup(); // Close any open warning
     camera.stop();
     if (ws) ws.close();
     clearInterval(timerInterval);

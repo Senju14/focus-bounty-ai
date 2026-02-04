@@ -1,68 +1,162 @@
-# FocusGuard AI
+# FocusGuard AI 🎯
 
-FocusGuard AI is a productivity tool built for the Comet Resolution V2 Hackathon. It uses computer vision to track your focus and generative AI to provide feedback if you get distracted.
+> **Your brutally honest AI productivity coach that roasts you back to focus.**
 
-## How It Works
+Built for the **Comet Opik + Groq Hackathon** - A real-time focus monitoring system that uses computer vision and generative AI to keep you on track with a "tough love" approach.
 
-The system uses a 3-step pipeline to ensure accuracy and safety:
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.109-green)
+![Groq](https://img.shields.io/badge/Groq-Llama%204-orange)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-1.  **Vision (The Scout)**: A computer vision model analyzes your webcam feed to detect what you are doing—whether you are working, looking at your phone, or absent.
-2.  **Reasoning (The Coach)**: If you are distracted, a reasoning model generates a sarcastic or "tough love" comment based on your specific distraction.
-3.  **Safety (The Guard)**: A safety filter checks the comment to ensure it is appropriate before it is spoken aloud.
+## ✨ Features
 
-## Key Features
+- **👁️ Real-time Face Tracking** - MediaPipe FaceMesh tracks your eyes, head pose, and iris position
+- **🤖 3-Stage AI Pipeline** - Vision → Reasoning → Safety using Groq's ultra-fast Llama 4 models
+- **🎤 Meme Voice Presets** - Paimon, Mickey Mouse, Morgan Freeman, Darth Vader, and more!
+- **📊 Session Dashboard** - Track your focus history with grades from F to A+
+- **🔔 Smart Alerts** - Browser notifications when you switch tabs
+- **🎨 Custom Memes** - Add your own meme images for personalized roasts
+- **📈 Opik Observability** - Full AI decision tracing and debugging
 
-*   **Iris Tracking**: Detects if your eyes are looking away from the screen, even if your head is facing forward.
-*   **Dynamic Voice**: Uses different voices for variety.
-*   **Report Card**: Grades your focus session from F to A+ when you finish.
-*   **Tab Awareness**: Sends a browser notification if you switch tabs to procrastinate.
-*   **Observability**: All AI decisions are logged to Opik for debugging.
+## 🏗️ Architecture
 
-## Getting Started
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      BROWSER (Client)                        │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │  MediaPipe  │  │   Web UI    │  │  Text-to-Speech     │  │
+│  │  FaceMesh   │  │  (Vanilla)  │  │  (Meme Voices)      │  │
+│  └──────┬──────┘  └──────┬──────┘  └──────────┬──────────┘  │
+│         │                │                     │             │
+│         └────────────────┼─────────────────────┘             │
+│                          │ WebSocket                         │
+└──────────────────────────┼───────────────────────────────────┘
+                           │
+┌──────────────────────────┼───────────────────────────────────┐
+│                      SERVER (Python)                         │
+│                          │                                   │
+│  ┌───────────────────────▼────────────────────────────────┐  │
+│  │                 FastAPI + Uvicorn                      │  │
+│  └───────────────────────┬────────────────────────────────┘  │
+│                          │                                   │
+│  ┌───────────────────────▼────────────────────────────────┐  │
+│  │               3-Stage Agentic Pipeline                 │  │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────────┐   │  │
+│  │  │   VISION    │ │  REASONING  │ │     SAFETY      │   │  │
+│  │  │ Llama Scout │→│Llama Maverick│→│  Llama Guard   │   │  │
+│  │  │ (Analyze)   │ │  (Roast)    │ │   (Filter)      │   │  │
+│  │  └─────────────┘ └─────────────┘ └─────────────────┘   │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                          │                                   │
+│  ┌───────────────────────▼────────────────────────────────┐  │
+│  │                    Comet Opik                          │  │
+│  │              (Observability & Tracing)                 │  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+```
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
-*   Python 3.10 or higher
-*   A Webcam
-*   Groq API Key (for the AI models)
+- Python 3.10+
+- Webcam
+- [Groq API Key](https://console.groq.com)
+- [Opik API Key](https://www.comet.com/opik) (optional, for tracing)
 
 ### Installation
 
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/focus-guard.git
-    cd focus-guard
-    ```
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/focus-bounty-ai.git
+cd focus-bounty-ai
 
-2.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-3.  Configure Environment:
-    Create a file named `.env` and add your keys:
-    ```env
-    GROQ_API_KEY=gsk_your_key_here
-    OPIK_API_KEY=your_opik_key_here
-    ```
+# Install dependencies
+pip install -r requirements.txt
 
-4.  Run the application:
-    ```bash
-    python main.py
-    ```
+# Configure environment
+cp .env.example .env
+# Edit .env and add your GROQ_API_KEY
+```
 
-5.  Open your browser:
-    *   **Landing Page**: http://localhost:8000
-    *   **Application**: http://localhost:8000/app
+### Run
 
-## Technology Stack
+```bash
+python main.py
+```
 
-*   **Frontend**: HTML, JavaScript, CSS
-*   **Vision**: Google MediaPipe (Face Mesh & Iris)
-*   **Backend**: Python (FastAPI)
-*   **AI Models**: Groq (Llama 4)
-*   **Tracking**: Comet Opik
+Open http://localhost:8000 in your browser!
 
-## License
+## 📁 Project Structure
 
-MIT License
+```
+focus-bounty-ai/
+├── main.py                 # Entry point
+├── requirements.txt        # Dependencies
+├── .env.example           # Environment template
+├── docs/
+│   └── architecture.txt   # System diagram
+├── src/
+│   └── focus_guard/
+│       ├── server.py      # FastAPI server
+│       ├── engine/
+│       │   └── groq_agent.py  # AI pipeline
+│       └── static/
+│           ├── app.html       # Main app
+│           ├── landing.html   # Landing page
+│           ├── dashboard.html # History
+│           ├── settings.html  # Config
+│           ├── css/           # Styles
+│           ├── js/            # Scripts
+│           └── assets/
+│               └── memes/
+│                   └── uploads/  # Your custom memes!
+└── tests/
+    └── test_system.py     # Pytest tests
+```
+
+## 🎤 Voice Presets
+
+| Voice | Description |
+|-------|-------------|
+| 🎲 Random | Auto-cycles through all voices |
+| ✨ Paimon | High-pitched, fast (Genshin Impact) |
+| 🐭 Mickey Mouse | Squeaky, cheerful |
+| 🎬 Morgan Freeman | Deep, slow, dramatic |
+| 🐿️ Chipmunk | Super high-pitched |
+| ⚫ Darth Vader | Deep, ominous |
+| 🌸 Anime Girl | Kawaii style |
+| 🤖 Robot | Monotone, mechanical |
+| 👻 Ghostface | Creepy whisper |
+
+## 🧪 Testing
+
+```bash
+pytest tests/test_system.py -v
+```
+
+## 🔧 Configuration
+
+Edit settings in the app or modify `src/focus_guard/static/js/app.js`:
+
+- **Focus Buffer Size** - Frames to average (prevents flickering)
+- **Roast Cooldown** - Seconds between roasts
+- **Detection Thresholds** - EAR and yaw sensitivity
+
+## 📜 License
+
+MIT License - See [LICENSE](LICENSE)
+
+## 🙏 Acknowledgments
+
+- [Groq](https://groq.com) - Ultra-fast LLM inference
+- [Comet Opik](https://www.comet.com/opik) - LLM observability
+- [MediaPipe](https://mediapipe.dev) - Face tracking
+
+---
+
+**Made with 💀 tough love for the Comet Resolution V2 Hackathon**

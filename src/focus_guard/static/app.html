@@ -23,7 +23,7 @@
             <a href="/app" class="nav-link active">Focus</a>
             <a href="/dashboard" class="nav-link">Dashboard</a>
             <a href="/settings" class="nav-link">Settings</a>
-            <select class="voice-select" id="voiceSelect">
+            <select class="voice-select" id="voiceSelect" title="Select voice style">
                 <option value="auto">🎲 Random Voice</option>
                 <option value="paimon">✨ Paimon</option>
                 <option value="mickey">🐭 Mickey Mouse</option>
@@ -36,7 +36,6 @@
                 <option value="female">👩 Female</option>
                 <option value="male">👨 Male</option>
             </select>
-            <button class="cam-toggle-btn" id="camToggleBtn" title="Toggle Camera Preview">📷</button>
         </nav>
     </header>
 
@@ -121,7 +120,7 @@
     </div>
 
     <div class="roast-modal" id="roastModal">
-        <img id="roastMeme" class="roast-meme" src="" alt="Roast Meme" style="display:none;">
+        <img id="roastMeme" class="roast-meme roast-meme-hidden" src="" alt="Roast Meme">
         <div class="roast-content">
             <div class="roast-label">Toxic Homie Says:</div>
             <div id="roastText">"Get back to work!"</div>

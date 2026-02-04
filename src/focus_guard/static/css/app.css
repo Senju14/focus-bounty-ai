@@ -88,6 +88,32 @@
     cursor: pointer;
 }
 
+/* Camera Toggle Button (in controls row) */
+.cam-toggle-btn {
+    padding: 8px 14px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cam-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: var(--accent-blue);
+    color: var(--text-main);
+}
+
+.cam-toggle-btn.active {
+    background: linear-gradient(135deg, var(--accent-blue), #7c4dff);
+    border-color: var(--accent-blue);
+    color: white;
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
 /* Meme Overlay */
 .meme-overlay {
     position: absolute;
@@ -209,29 +235,6 @@
     font-style: italic;
 }
 
-/* Camera Toggle Button */
-.cam-toggle-btn {
-    width: 36px;
-    height: 36px;
-    border: none;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-blue), #7c4dff);
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
-}
-
-.cam-toggle-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
-}
-
-.cam-toggle-btn.active {
-    background: linear-gradient(135deg, var(--accent-green), #00c853);
-}
-
 /* Floating Camera Preview */
 .floating-cam {
     position: fixed;
@@ -318,6 +321,10 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+.roast-meme-hidden {
+    display: none;
+}
+
 .roast-label {
     font-size: 12px;
     text-transform: uppercase;
@@ -338,24 +345,4 @@
 /* Log time styling */
 .log-time {
     color: var(--accent-blue);
-}
-
-/* Siren flash effect */
-.siren-flash {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: red;
-    opacity: 0.5;
-    z-index: 9999;
-    pointer-events: none;
-    animation: blink 0.2s infinite;
-}
-
-@keyframes blink {
-    0% { opacity: 0.5; }
-    50% { opacity: 0; }
-    100% { opacity: 0.5; }
 }

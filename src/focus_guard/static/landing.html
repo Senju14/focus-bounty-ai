@@ -20,7 +20,7 @@
             <a href="#features" class="nav-link">Features</a>
             <a href="#how-it-works" class="nav-link">How It Works</a>
             <a href="#tech" class="nav-link">Tech Stack</a>
-            <a href="#future" class="nav-link">Future</a>
+            <a href="#feedback" class="nav-link">Feedback</a>
             <a href="/app" class="btn-launch">Try Demo Now</a>
         </nav>
     </header>
@@ -205,6 +205,29 @@
         </div>
     </section>
 
+    <!-- Section 7: Feedback -->
+    <section class="feedback-section" id="feedback">
+        <h2 class="section-title">Share Your Feedback</h2>
+        <p class="section-subtitle">Help us improve FocusGuard (anonymous)</p>
+        
+        <div class="feedback-container">
+            <form id="feedbackForm" class="feedback-form">
+                <textarea id="feedbackText" placeholder="What do you think? Any suggestions, bugs, or feature requests..." rows="4" required></textarea>
+                <button type="submit" class="btn-primary">Submit Feedback</button>
+            </form>
+            <p id="feedbackStatus" class="feedback-status"></p>
+            
+            <div class="feedback-list-toggle">
+                <button type="button" class="btn-secondary" onclick="toggleFeedbackList()">View All Feedback</button>
+            </div>
+            
+            <div id="feedbackList" class="feedback-list" style="display: none;">
+                <h4>Community Feedback</h4>
+                <div id="feedbackItems"></div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta-section">
         <h2>Ready to Focus?</h2>
@@ -224,8 +247,9 @@
         </div>
     </footer>
 
-    <!-- Demo Score Animation -->
+    <!-- Demo Score Animation + Feedback -->
     <script>
+        // Demo animation
         (function() {
             var score = 85;
             var direction = 1;
@@ -237,6 +261,66 @@
                 if (el) el.textContent = Math.round(score) + "%";
             }, 1500);
         })();
+
+        // Feedback functionality (localStorage based - anonymous)
+        var FEEDBACK_KEY = "focusguard_feedback";
+
+        function getFeedback() {
+            return JSON.parse(localStorage.getItem(FEEDBACK_KEY) || "[]");
+        }
+
+        function saveFeedback(text) {
+            var feedback = getFeedback();
+            feedback.push({
+                id: Date.now(),
+                text: text,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback));
+        }
+
+        document.getElementById("feedbackForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var text = document.getElementById("feedbackText").value.trim();
+            if (text) {
+                saveFeedback(text);
+                document.getElementById("feedbackText").value = "";
+                document.getElementById("feedbackStatus").textContent = "✅ Thank you for your feedback!";
+                document.getElementById("feedbackStatus").style.color = "#34A853";
+                setTimeout(function() {
+                    document.getElementById("feedbackStatus").textContent = "";
+                }, 3000);
+                renderFeedbackList();
+            }
+        });
+
+        function toggleFeedbackList() {
+            var list = document.getElementById("feedbackList");
+            if (list.style.display === "none") {
+                list.style.display = "block";
+                renderFeedbackList();
+            } else {
+                list.style.display = "none";
+            }
+        }
+
+        function renderFeedbackList() {
+            var feedback = getFeedback();
+            var container = document.getElementById("feedbackItems");
+            if (feedback.length === 0) {
+                container.innerHTML = "<p class='no-feedback'>No feedback yet. Be the first!</p>";
+                return;
+            }
+            container.innerHTML = feedback.slice().reverse().map(function(f) {
+                return "<div class='feedback-item'><p>" + escapeHtml(f.text) + "</p><span class='feedback-date'>" + f.date + "</span></div>";
+            }).join("");
+        }
+
+        function escapeHtml(text) {
+            var div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 </html>
