@@ -2,6 +2,8 @@
 
 > **Your brutally honest AI productivity coach that roasts you back to focus.**
 
+https://focus-bounty-ai--522h0134.replit.app/app
+
 Built for the **Comet Opik + Groq Hackathon** - A real-time focus monitoring system that uses computer vision and generative AI to keep you on track with a "tough love" approach.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
