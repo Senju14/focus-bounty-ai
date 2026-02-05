@@ -21,7 +21,22 @@ app = FastAPI(title="FocusGuard AI")
 
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
 
-groq_agent = GroqAgent()
+# Initialize AI agent (graceful fallback if no API key)
+try:
+    groq_agent = GroqAgent()
+except Exception as e:
+    print(f"Warning: Could not initialize GroqAgent: {e}")
+    groq_agent = None
+
+
+# =============================================================================
+# Health Check (for Railway/Render)
+# =============================================================================
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for deployment platforms."""
+    return {"status": "healthy", "service": "FocusGuard AI"}
 
 
 # =============================================================================
