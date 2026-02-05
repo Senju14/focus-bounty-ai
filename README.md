@@ -86,37 +86,43 @@ cp .env.example .env
 ### Run
 
 ```bash
-python main.py
+python run_local.py
 ```
 
-Open http://localhost:8000 in your browser!
+Open http://localhost:5000 in your browser!
+
+### Deploy on Replit
+
+1. Import this repo on [Replit](https://replit.com)
+2. Add `GROQ_API_KEY` in Secrets
+3. Click **Run** - that's it!
 
 ## 📁 Project Structure
 
 ```
 focus-bounty-ai/
-├── main.py                 # Entry point
-├── requirements.txt        # Dependencies
-├── .env.example           # Environment template
-├── docs/
-│   └── architecture.txt   # System diagram
+├── run_local.py           # Entry point
+├── requirements.txt       # Dependencies
+├── .env.example          # Environment template
+├── .replit               # Replit config
+├── replit.nix            # Replit dependencies
 ├── src/
 │   └── focus_guard/
-│       ├── server.py      # FastAPI server
+│       ├── server.py     # FastAPI server
 │       ├── engine/
 │       │   └── groq_agent.py  # AI pipeline
 │       └── static/
-│           ├── app.html       # Main app
-│           ├── landing.html   # Landing page
+│           ├── app.html      # Main app
+│           ├── landing.html  # Landing page
 │           ├── dashboard.html # History
-│           ├── settings.html  # Config
-│           ├── css/           # Styles
-│           ├── js/            # Scripts
+│           ├── settings.html # Config
+│           ├── css/          # Styles
+│           ├── js/           # Scripts
 │           └── assets/
 │               └── memes/
 │                   └── uploads/  # Your custom memes!
 └── tests/
-    └── test_system.py     # Pytest tests
+    └── test_system.py    # Pytest tests
 ```
 
 ## 🎤 Voice Presets

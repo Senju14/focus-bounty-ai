@@ -1,6 +1,6 @@
 """
 FocusGuard AI - Entry Point
-Run locally: python main.py
+Run: python run_local.py
 """
 import sys
 import os
@@ -12,13 +12,16 @@ def main():
     import uvicorn
     from focus_guard.server import app
     
-    print("Starting FocusGuard AI...")
-    print("Open http://localhost:8000 in your browser")
+    # Use PORT env var for Replit, default 5000
+    port = int(os.environ.get("PORT", 5000))
+    
+    print("🚀 Starting FocusGuard AI...")
+    print(f"🌐 Open http://localhost:{port} in your browser")
     
     uvicorn.run(
         app,
-        host="127.0.0.1",
-        port=8000,
+        host="0.0.0.0",
+        port=port,
         reload=False,
         log_level="info"
     )
