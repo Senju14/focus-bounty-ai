@@ -5,10 +5,18 @@ FocusGuard AI - Groq Agent
 
 import os
 from groq import Groq
-from opik import track
 from typing import Dict, Any
 
-os.environ["OPIK_PROJECT_NAME"] = "FocusGuard AI"
+# Optional: Opik tracking (disable for production/Railway)
+try:
+    from opik import track
+    os.environ["OPIK_PROJECT_NAME"] = "FocusGuard AI"
+except ImportError:
+    # Dummy decorator if opik not installed
+    def track(name=None):
+        def decorator(func):
+            return func
+        return decorator
 
 
 # =============================================================================
