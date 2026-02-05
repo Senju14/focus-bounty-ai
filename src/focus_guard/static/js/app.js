@@ -52,7 +52,9 @@ var FOCUS_BUFFER_SIZE = 8; // Number of frames to average (prevents flickering)
 // =============================================================================
 
 var SETTINGS_KEY = "focusguard_settings";
-var WS_URL = "ws://" + window.location.host + "/ws/focus";
+// Auto-detect ws:// or wss:// based on page protocol (fixes HTTPS deployment)
+var WS_PROTOCOL = window.location.protocol === "https:" ? "wss:" : "ws:";
+var WS_URL = WS_PROTOCOL + "//" + window.location.host + "/ws/focus";
 
 // Local asset paths
 var PRAISE_MEMES = [
